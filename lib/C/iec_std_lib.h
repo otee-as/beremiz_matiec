@@ -290,10 +290,10 @@ typedef struct {
 	int tm_day;			/* Day.		[1-31] */
 	int tm_mon;			/* Month.	[0-11] */
 	int tm_year;			/* Year	*/
-} tm;
+} tm_ts;
 
-static inline tm convert_seconds_to_date_and_time(long int seconds) {
-  tm dt;
+static inline tm_ts convert_seconds_to_date_and_time(long int seconds) {
+  tm_ts dt;
   long int days, rem;
   days = seconds / SECONDS_PER_DAY;
   rem = seconds % SECONDS_PER_DAY;
@@ -589,18 +589,18 @@ static inline LREAL __time_to_real(TIME IN){
 static inline LINT __time_to_int(TIME IN) {return IN.tv_sec;}
 static inline STRING __time_to_string(TIME IN){
     STRING res;
-    div_t days;
+    lldiv_t days;
     /*t#5d14h12m18s3.5ms*/
     res = __INIT_STRING;
-    days = div(IN.tv_sec, SECONDS_PER_DAY);
+    days = lldiv(IN.tv_sec, SECONDS_PER_DAY);
     if(!days.rem && IN.tv_nsec == 0){
         res.len = snprintf((char*)&res.body, STR_MAX_LEN, "T#%dd", days.quot);
     }else{
-        div_t hours = div(days.rem, SECONDS_PER_HOUR);
+        div_t hours = div((int)days.rem, SECONDS_PER_HOUR);
         if(!hours.rem && IN.tv_nsec == 0){
             res.len = snprintf((char*)&res.body, STR_MAX_LEN, "T#%dd%dh", days.quot, hours.quot);
         }else{
-            div_t minuts = div(hours.rem, SECONDS_PER_MINUTE);
+            div_t minuts = div((int)hours.rem, SECONDS_PER_MINUTE);
             if(!minuts.rem && IN.tv_nsec == 0){
                 res.len = snprintf((char*)&res.body, STR_MAX_LEN, "T#%dd%dh%dm", days.quot, hours.quot, minuts.quot);
             }else{
@@ -617,7 +617,7 @@ static inline STRING __time_to_string(TIME IN){
 }
 static inline STRING __date_to_string(DATE IN){
     STRING res;
-    tm broken_down_time;
+    tm_ts broken_down_time;
     /* D#1984-06-25 */
     broken_down_time = convert_seconds_to_date_and_time(IN.tv_sec);
     res = __INIT_STRING;
@@ -630,7 +630,7 @@ static inline STRING __date_to_string(DATE IN){
 }
 static inline STRING __tod_to_string(TOD IN){
     STRING res;
-    tm broken_down_time;
+    tm_ts broken_down_time;
     time_t seconds;
     /* TOD#15:36:55.36 */
     seconds = IN.tv_sec;
@@ -656,7 +656,7 @@ static inline STRING __tod_to_string(TOD IN){
 }
 static inline STRING __dt_to_string(DT IN){
     STRING res;
-    tm broken_down_time;
+    tm_ts broken_down_time;
     /* DT#1984-06-25-15:36:55.36 */
     broken_down_time = convert_seconds_to_date_and_time(IN.tv_sec);
     if(IN.tv_nsec == 0){
