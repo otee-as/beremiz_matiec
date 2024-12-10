@@ -49,3 +49,13 @@ PDT *)
 
 END_FUNCTION_BLOCK
 
+FUNCTION OTeeRTCUTC : DT
+  VAR
+    UTC_TIME : ULINT;
+  END_VAR
+  {
+    time_t curr_time = time(NULL);
+    __SET_VAR(data__->,UTC_TIME,,curr_time);
+  }
+  OTeeRTCUTC := ULINT_TO_DT(UTC_TIME);
+END_FUNCTION
