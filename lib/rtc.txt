@@ -49,3 +49,28 @@ PDT *)
 
 END_FUNCTION_BLOCK
 
+FUNCTION OTeeRTCUTC : DT
+  VAR_INPUT
+    IN : BOOL;
+  END_VAR
+  VAR
+    UTC_TIME : DT;
+  END_VAR
+  {
+    clock_gettime(CLOCK_REALTIME, &UTC_TIME);
+  }
+  OTeeRTCUTC := UTC_TIME;
+END_FUNCTION
+
+FUNCTION OTeeRTCSystime : DT
+  VAR_INPUT
+    IN : BOOL;
+  END_VAR
+  VAR
+    SYS_TIME : DT;
+  END_VAR
+  {
+	clock_gettime(CLOCK_MONOTONIC, &SYS_TIME);
+  }
+  OTeeRTCSystime := SYS_TIME;
+END_FUNCTION

@@ -1656,8 +1656,21 @@ static inline DT CONCAT_DATE_TOD(EN_ENO_PARAMS DATE IN1, TOD IN2){
 
 /* Do we support this? */
 
+/********************************************/
+/***          OTee-related code           ***/
+/********************************************/
 
+static inline DT OTEERTCUTC(EN_ENO_PARAMS BOOL IN) {
+  DT UTC_TIME;
+  clock_gettime(CLOCK_REALTIME, &UTC_TIME);
+  return UTC_TIME;
+}
 
+static inline DT OTEERTCSYSTIME(EN_ENO_PARAMS BOOL IN) {
+  DT SYS_TIME;
+  clock_gettime(CLOCK_MONOTONIC, &SYS_TIME);
+  return SYS_TIME;
+}
 
 
 
